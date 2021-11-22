@@ -20,5 +20,5 @@ def products(request):
     }
 
     context['products'] = Product.objects.all()
-    context['category'] = ProductCategory.objects.all()
+    context['categories'] = ProductCategory.objects.all()
     return render(request, 'mainapp/products.html', context)
