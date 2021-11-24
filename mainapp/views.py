@@ -16,7 +16,7 @@ def index(request):
 def products(request):
     # file_path = os.path.join(MODULE_DIR, 'fixtures/goods.json')
     context = {
-        'title': 'Geekshop - Каталог',
+        'title': 'Geekshop | Каталог',
     }
 
     context['products'] = Product.objects.all()
