@@ -1,8 +1,10 @@
-
+from django.contrib import auth
+from django.http import HttpResponseRedirect
 from django.shortcuts import render
 
 # Create your views here.
-from authapp.forms import UserLoginForm
+from django.urls import reverse
+from authapp.forms import UserLoginForm, UserRegisterForm
 
 def login(request):
     if request.method == 'POST':
@@ -25,6 +27,16 @@ def login(request):
     return render(request, 'authapp/login.html', context)
 
 def register(request):
+    if request.method == 'POST':
+        form = UserRegisterForm(data=request.POST)
+        if form.is_valid():
+            form.save()
+            return HttpResponseRedirect(reverse('authapp:login'))
+        else:
+            print(form.errors)
+    else:
+        form = UserRegisterForm()
     context = {
-        'title': 'Geekshop | Регистрация', }
+        'title': 'Geekshop | Регистрация',
+        'form': form}
     return render(request, 'authapp/register.html', context)
