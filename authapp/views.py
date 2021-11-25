@@ -40,3 +40,7 @@ def register(request):
         'title': 'Geekshop | Регистрация',
         'form': form}
     return render(request, 'authapp/register.html', context)
+
+def logout(request):
+    auth.logout(request)
+    return render(request, 'mainapp/index.html')
