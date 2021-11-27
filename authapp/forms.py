@@ -1,9 +1,13 @@
 from django.contrib.auth.forms import UserCreationForm, AuthenticationForm
+# from django.core.exceptions import ValidationError
+# from django import forms
 
 from authapp.models import User
+# from authapp.validator import validate_name
 
 class UserLoginForm(AuthenticationForm):
 
+    # username = forms.CharField(widget=forms.TextInput(), validators=[validate_name])
     class Meta:
         model = User
         fields = ('username', 'password')
