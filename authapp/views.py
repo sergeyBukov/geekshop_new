@@ -32,8 +32,8 @@ def register(request):
         if form.is_valid():
             form.save()
             return HttpResponseRedirect(reverse('authapp:login'))
-        else:
-            print(form.errors)
+        # else:
+        #     print(form.errors)
     else:
         form = UserRegisterForm()
     context = {
