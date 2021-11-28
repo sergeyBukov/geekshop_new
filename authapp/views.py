@@ -46,6 +46,7 @@ def profile(request):
 
     context = {
         'title': 'Geekshop | Профайл',
+        'form': UserProfilerForm()
     }
     return render(request, 'authapp/profile.html', context)
 
