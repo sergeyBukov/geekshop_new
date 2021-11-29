@@ -9,6 +9,3 @@ urlpatterns = [
     path('add/<int:id>/', basket_add, name='basket_add'),
 
 ]
-
-
-
