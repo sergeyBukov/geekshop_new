@@ -8,6 +8,7 @@ from django.urls import reverse
 from authapp.forms import UserLoginForm, UserRegisterForm, UserProfilerForm
 from baskets.models import Basket
 
+
 def login(request):
     if request.method == 'POST':
         form = UserLoginForm(data=request.POST)
@@ -25,8 +26,9 @@ def login(request):
     context = {
         'title': 'Geekshop | Авторизация',
         'form': form
-        }
+    }
     return render(request, 'authapp/login.html', context)
+
 
 def register(request):
     if request.method == 'POST':
@@ -44,15 +46,16 @@ def register(request):
         'form': form}
     return render(request, 'authapp/register.html', context)
 
+
 @login_required
 def profile(request):
     if request.method == 'POST':
-       form = UserProfilerForm(instance=request.user,data=request.POST,files=request.FILES)
-       if form.is_valid():
-           messages.success(request, 'Вы успешно сохранили профайл')
-           form.save()
-       else:
-           print(form.errors)
+        form = UserProfilerForm(instance=request.user, data=request.POST, files=request.FILES)
+        if form.is_valid():
+            messages.success(request, 'Вы успешно сохранили профайл')
+            form.save()
+        else:
+            print(form.errors)
 
     context = {
         'title': 'Geekshop | Профайл',
@@ -60,6 +63,7 @@ def profile(request):
         'baskets': Basket.objects.filter(user=request.user)
     }
     return render(request, 'authapp/profile.html', context)
+
 
 def logout(request):
     auth.logout(request)
