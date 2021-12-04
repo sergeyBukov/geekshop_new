@@ -1,8 +1,6 @@
 from django.urls import path
 
-# from baskets.views import basket_add, basket_remove, basket_edit
-from admins.views import index, admin_users, admin_users_create, admin_users_update, admin_users_delete
-
+from admins.views import index, admin_users_create, admin_users_update, admin_users_delete, admin_users
 app_name = 'admins'
 urlpatterns = [
 
