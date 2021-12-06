@@ -18,13 +18,15 @@ def index(request):
     return render(request, 'mainapp/index.html', context)
 
 
-def products(request):
-    # file_path = os.path.join(MODULE_DIR, 'fixtures/goods.json')
+def products(request, id_category=None):
     context = {
         'title': 'Geekshop | Каталог',
     }
+    if id_category:
+        context['products'] = Product.objects.filter(category_id=id_category)
+    else:
+        context['products'] = Product.objects.all()
 
-    context['products'] = Product.objects.all()
     context['categories'] = ProductCategory.objects.all()
     return render(request, 'mainapp/products.html', context)
 
