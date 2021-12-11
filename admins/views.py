@@ -7,7 +7,7 @@ from django.urls import reverse, reverse_lazy
 from django.utils.decorators import method_decorator
 from django.views.generic import ListView, UpdateView, DeleteView, CreateView, DetailView, TemplateView
 
-from admins.forms import UserAdminRegisterForm, UserAdminProfileForm, CategoryUpdateFormAdmin
+from admins.forms import UserAdminRegisterForm, UserAdminProfileForm, CategoryUpdateFormAdmin, ProductsForm
 from authapp.models import User
 from mainapp.mixin import BaseClassContextMixin, CustomDispatchMixin
 from mainapp.models import Product, ProductCategory
@@ -61,7 +61,13 @@ class CategoryListView(ListView, BaseClassContextMixin, CustomDispatchMixin):
     title = 'Админка | Список категорий'
 
 
-class CategoryDeleteView(DeleteView, BaseClassContextMixin, CustomDispatchMixin):
+    # def get_queryset(self):
+    #     if self.kwargs:
+    #        return ProductCategory.objects.filter(id=self.kwargs.get('pk'))
+    #     else:
+    #        return ProductCategory.objects.all()
+
+class CategoryDeleteView(DeleteView,BaseClassContextMixin,CustomDispatchMixin):
     model = ProductCategory
     template_name = 'admins/admin-category-update-delete.html'
     success_url = reverse_lazy('admins:admin_category')
@@ -75,14 +81,12 @@ class CategoryDeleteView(DeleteView, BaseClassContextMixin, CustomDispatchMixin)
         self.object.save()
         return HttpResponseRedirect(self.get_success_url())
 
-
 class CategoryUpdateView(UpdateView, BaseClassContextMixin, CustomDispatchMixin):
     model = ProductCategory
     template_name = 'admins/admin-category-update-delete.html'
     form_class = CategoryUpdateFormAdmin
     title = 'Админка | Обновления категории'
     success_url = reverse_lazy('admins:admin_category')
-
 
 class CategoryCreateView(CreateView, BaseClassContextMixin, CustomDispatchMixin):
     model = ProductCategory
@@ -91,12 +95,33 @@ class CategoryCreateView(CreateView, BaseClassContextMixin, CustomDispatchMixin)
     form_class = CategoryUpdateFormAdmin
     title = 'Админка | Создание категории'
 
-
 # Product
 class ProductListView(ListView, BaseClassContextMixin, CustomDispatchMixin):
     model = Product
     template_name = 'admins/admin-product-read.html'
     title = 'Админка | Продукты'
 
-    def get_queryset(self):
-        return Product.objects.all().select_related()
+class ProductsUpdateView(UpdateView, BaseClassContextMixin,CustomDispatchMixin):
+    model = Product
+    template_name = 'admins/admin-products-update-delete.html'
+    form_class = ProductsForm
+    title = 'Админка | Обновление продукта'
+    success_url = reverse_lazy('admins:admins_product')
+
+class ProductsCreateView(CreateView, BaseClassContextMixin,CustomDispatchMixin):
+    model = Product
+    template_name = 'admins/admin-products-create.html'
+    form_class = ProductsForm
+    title = 'Админка | Создание продукта'
+    success_url = reverse_lazy('admins:admins_product')
+
+class ProductsDeleteView(DeleteView, CustomDispatchMixin):
+    model = Product
+    template_name = 'admins/admin-product-read.html'
+    success_url = reverse_lazy('admins:admins_product')
+
+    def delete(self, request, *args, **kwargs):
+        self.object = self.get_object()
+        self.object.is_active = False if self.object.is_active else True
+        self.object.save()
+        return HttpResponseRedirect(self.get_success_url())
