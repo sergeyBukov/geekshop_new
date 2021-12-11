@@ -1,4 +1,5 @@
 from django import forms
+
 from authapp.forms import UserRegisterForm, UserProfilerForm
 from authapp.models import User
 from mainapp.models import ProductCategory
@@ -32,15 +33,18 @@ class UserAdminProfileForm(UserProfilerForm):
             field.widget.attrs['class'] = 'form-control py-4'
         self.fields['image'].widget.attrs['class'] = 'custom-file-input'
 
+class CategoryUpdateFormAdmin(forms.ModelForm):
+    # name = forms.CharField(widget=forms.TextInput())
+    # description = forms.CharField(widget=forms.TextInput(), required=False)
+    # # is_active = forms.BooleanField(widget=forms.CheckboxInput())
 
-# class CategoryUpdateFormAdmin(forms.ModelForm):
-#     class Meta:
-#         model = ProductCategory
-#         fields = ('name', 'description', 'is_active')
-#
-#     def __init__(self, *args, **kwargs):
-#         super().__init__(*args, **kwargs)
-#
-#         for field_name, field in self.fields.items():
-#             field.widget.attrs['class'] = 'form-control'
-#         self.fields['description'].widget.attrs['rows'] = 1
+
+    class Meta:
+        model = ProductCategory
+        # exclude =()
+        fields = ('name', 'description')
+
+    def __init__(self, *args, **kwargs):
+        super(CategoryUpdateFormAdmin, self).__init__(*args, **kwargs)
+        for field_name, field in self.fields.items():
+            field.widget.attrs['class'] = 'form-control py-4'
