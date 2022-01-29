@@ -19,6 +19,8 @@ from django.urls import path, include
 from django.conf import settings
 from django.conf.urls.static import static
 
+import debug_toolbar
+
 from mainapp.views import index, products
 
 urlpatterns = [
@@ -33,5 +35,7 @@ urlpatterns = [
     path('', include('social_django.urls', namespace='social')),
 
 ]
+if settings.DEBUG:
+    urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
+    urlpatterns += [path('debug/', include(debug_toolbar.urls))]
 
-urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
