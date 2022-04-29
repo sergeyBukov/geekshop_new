@@ -142,6 +142,7 @@ class ProfileFormView(UpdateView, BaseClassContextMixin, UserDispatchMixin):
         return get_object_or_404(User, pk=self.request.user.pk)
 
 
+
 # def logout(request):
 #     auth.logout(request)
 #     return render(request, 'mainapp/index.html')
