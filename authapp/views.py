@@ -9,7 +9,7 @@ from django.shortcuts import render, redirect, get_object_or_404
 from django.urls import reverse, reverse_lazy
 from django.views.generic import FormView, UpdateView
 
-from authapp.forms import UserLoginForm, UserRegisterForm, UserProfilerForm
+from authapp.forms import UserLoginForm, UserRegisterForm, UserProfilerForm, UserProfileEditForm
 from authapp.models import User
 from baskets.models import Basket
 from mainapp.mixin import BaseClassContextMixin, UserDispatchMixin
@@ -101,6 +101,7 @@ class RegisterListView(FormView, BaseClassContextMixin):
                 user.activation_key_expires = None
                 user.is_active = True
                 user.save()
+                auth.login(self, user, backend='django.contrib.auth.backends.ModelBackend')
                 auth.login(self, user)
             return render(self, 'authapp/verification.html')
         except Exception as e:
@@ -132,6 +133,18 @@ class ProfileFormView(UpdateView, BaseClassContextMixin, UserDispatchMixin):
     # success_message = 'OK'
     title = 'GeekShop - Профиль'
 
+    def post(self, request, *args, **kwargs):
+        form = UserProfilerForm(data=request.POST, files=request.FILES, instance=request.user)
+        profile_form = UserProfileEditForm(data=request.POST, files=request.FILES, instance=request.user.userprofile)
+        if form.is_valid() and profile_form.is_valid():
+            form.save()
+        return redirect(self.success_url)
+
+    def get_context_data(self, **kwargs):
+        context = super(ProfileFormView, self).get_context_data()
+        context['profile'] = UserProfileEditForm(instance=self.request.user.userprofile)
+        return context
+
     def form_valid(self, form):
         messages.set_level(self.request, messages.SUCCESS)
         messages.success(self.request, "Вы успешно зарегистрировались")
@@ -140,7 +153,6 @@ class ProfileFormView(UpdateView, BaseClassContextMixin, UserDispatchMixin):
 
     def get_object(self, *args, **kwargs):
         return get_object_or_404(User, pk=self.request.user.pk)
-
 
 
 # def logout(request):
