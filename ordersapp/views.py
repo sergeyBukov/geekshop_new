@@ -13,7 +13,7 @@ from ordersapp.forms import OrderForm, OrderItemsForm
 from ordersapp.models import Order, OrderItem
 
 
-class OrderList(ListView):
+class OrderList(ListView, BaseClassContextMixin):
     model = Order
     title = 'GeekShop | Список заказов'
 
